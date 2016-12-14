@@ -73,3 +73,17 @@ MEDIA QUERIES
         font-size: 120%;
     }
 }
+
+/*===========================
+CLEARFIX
+===========================*/
+
+.clearfix::before,
+.clearfix::after {
+    content: " ";
+    display: table;
+}
+
+.clearfix::after {
+    clear: both;
+}
