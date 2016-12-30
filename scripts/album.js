@@ -29,6 +29,25 @@ var albumMarconi = {
     ]
 };
 
+var albumExample3 = {
+    title: 'Awesome Title',
+    artist: 'Awesome Artist',
+    label: 'THE Label',
+    year: '2016',
+    albumArtUrl: 'assets/images/album_covers/06.png',
+    songs: [
+        { title: 'Smash Hit', duration: '3:01' },
+        { title: 'Sweet Feel Good Follow up', duration: '4:23' },
+        { title: 'The Ballad', duration: '6:21'},
+        { title: 'That Song Everyone Loves', duration: '3:44' },
+        { title: 'Classic Jam', duration: '4:15'}
+    ]
+};
+
+//Created a myAlbums array to contain all of the album objects.
+var myAlbums = [albumPicasso, albumMarconi, albumExample3];
+
+
 var createSongRow = function(songNumber, songName, songLength) {
     var template =
        '<tr class="album-view-song-item">'
@@ -63,6 +82,35 @@ var setCurrentAlbum = function(album) {
 window.onload = function() {
     setCurrentAlbum(albumPicasso);
 };
+
+
+//Album 'onclick' Event Listener
+
+var albumCover = document.getElementsByClassName('album-cover-link')[0];
+
+albumCover.addEventListener('click', function() {
+    if (albumCover.firstChild.getAttribute('src') === myAlbums[0].albumArtUrl) {
+        setCurrentAlbum(myAlbums[1]);
+    } else if (albumCover.firstChild.getAttribute('src') === myAlbums[1].albumArtUrl) {
+        setCurrentAlbum(myAlbums[2]);
+    } else if (albumCover.firstChild.getAttribute('src') === myAlbums[2].albumArtUrl) {
+        setCurrentAlbum(myAlbums[0]);
+    }
+})
+
+//My original solution is below. I rewrote it to make the 'if' statements more flexible in case I need to make a function that handles changing the albums in case there are a lot of them.
+
+/*
+albumCover.addEventListener('click', function() {
+    if (albumCover.firstChild.getAttribute('src') === 'assets/images/album_covers/01.png') {
+        setCurrentAlbum(albumMarconi);
+    } else if (albumCover.firstChild.getAttribute('src') === 'assets/images/album_covers/20.png') {
+        setCurrentAlbum(albumExample3);
+    } else if (albumCover.firstChild.getAttribute('src') === 'assets/images/album_covers/06.png') {
+        setCurrentAlbum(albumPicasso);
+    }
+})
+*/
 
 
 
