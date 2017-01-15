@@ -13,21 +13,23 @@ var createSongRow = function(songNumber, songName, songLength) {
     var clickHandler = function() {
         var $songNumber = parseInt($(this).attr('data-song-number'));
 
-        if (currentlyPlayingSongNumber !== null) {
-            // Revert to song number for currently playing song because user started playing new song.
-            var $currentlyPlayingCell = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
-            $currentlyPlayingCell.html(currentlyPlayingSongNumber);
+        if (currentlyPlayingSongNum !== null) {
+            // Revert to song number for currently playing song because user started playing new song
+            var $currentlyPlayingCell = $('[data-song-number="' + currentlyPlayingSongNum + '"]');
+            console.log(typeof currentlyPlayingSongNum);
+            $currentlyPlayingCell.html(currentlyPlayingSongNum);
         }
-        if (currentlyPlayingSongNumber !== $songNumber) {
+        if (currentlyPlayingSongNum !== $songNumber) {
             // Switch from Play -> Pause button to indicate new song is playing.
             $(this).html(pauseButtonTemplate);
-            currentlyPlayingSongNumber = $songNumber;
+            console.log(typeof currentlyPlayingSongNum);
+            currentlyPlayingSongNum = $songNumber;
             currentSongFromAlbum = currentAlbum.songs[$songNumber - 1];
             updatePlayerBarSong();
-        } else if (currentlyPlayingSongNumber === $songNumber) {
+        } else if (currentlyPlayingSongNum === $songNumber) {
             // Switch from Pause -> Play button to pause currently playing song
             $(this).html(playButtonTemplate);
-            currentlyPlayingSongNumber = null;
+            currentlyPlayingSongNum = null;
             currentSongFromAlbum = null;
             $('.main-controls .play-pause').html(playerBarPlayButton);
         }
@@ -37,7 +39,7 @@ var createSongRow = function(songNumber, songName, songLength) {
         var $songNumberCell = $(this).find('.song-item-number');
         var $songNumber = parseInt($songNumberCell.attr('data-song-number'));
         
-        if ($songNumber !== currentlyPlayingSongNumber) {
+        if ($songNumber !== currentlyPlayingSongNum) {
             $songNumberCell.html(playButtonTemplate);
         }
     };
@@ -45,10 +47,10 @@ var createSongRow = function(songNumber, songName, songLength) {
         var $songNumberCell = $(this).find('.song-item-number');
         var $songNumber = parseInt($songNumberCell.attr('data-song-number'));
         
-        if ($songNumber !== currentlyPlayingSongNumber) {
+        if ($songNumber !== currentlyPlayingSongNum) {
             $songNumberCell.html($songNumber);
         }
-        console.log("songNumber type is " + typeof $songNumber + "\n and currentlyPlayingSongNumber type is " + typeof currentlyPlayingSongNumber);
+        console.log("songNumber type is " + typeof $songNumber + "\n and currentlyPlayingSongNum type is " + typeof currentlyPlayingSongNum);
     };
     
     $row.find('.song-item-number').click(clickHandler);
@@ -84,11 +86,17 @@ var trackIndex = function(album, song) {
 
 var nextSong = function() {
     //Get current->previous song
+    //My attempt to create this function (doesn't correctly change the html of first/last songs when pressing next button)
+    /*
     var getLastSongNumber = function(index) {
-        if (index >= currentAlbum.songs.length) {
+        if (index > currentAlbum.songs.length) {
             index = 0;
         }
         return index;
+    };
+    */
+    var getLastSongNumber = function(index) {
+        return index == 0 ? currentAlbum.songs.length : index;
     };
     
     //Use the trackIndex() helper function to get the index of the current song and then increment the value of the index.
@@ -108,20 +116,31 @@ var nextSong = function() {
     //Update the HTML of the previous song's .song-item-number element with a number
     //Update the HTML of the new song's .song-item-number element with a pause button
     var lastSongNumber = getLastSongNumber(currentSongIndex);
+    console.log(currentSongIndex);
+    console.log(lastSongNumber);
     var $currentSongNumberCell = $('.song-item-number[data-song-number="' + lastSongNumber + '"]');
     var $nextSongNumberCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
     
-    $currentSongNumberCell.html(currentSongIndex);
+    $currentSongNumberCell.html(lastSongNumber);
     $nextSongNumberCell.html(pauseButtonTemplate);
+    currentlyPlayingSongNum++;
+    if (currentlyPlayingSongNum > currentAlbum.songs.length) {
+        currentlyPlayingSongNum = 1;
+    }
 };
 
 var previousSong = function() {
-    //Get current->previous song
+    //My attempt to create this function (doesn't correctly change the html of first/last songs when pressing prev button)
+    /*
     var getLastSongNumber = function(index) {
         if (index < 0) {
-            index = currentAlbum.songs.length;
+            index = currentAlbum.songs.length-1;
         }
         return index + 2;
+    };
+    */
+    var getLastSongNumber = function(index) {
+        return index == (currentAlbum.songs.length - 1) ? 1 : index + 2;
     };
     
     //Use the trackIndex() helper function to get the index of the current song and then increment the value of the index.
@@ -146,6 +165,10 @@ var previousSong = function() {
     
     $previousSongNumberCell.html(pauseButtonTemplate);
     $lastSongNumberCell.html(lastSongNumber);
+    currentlyPlayingSongNum--;
+    if (currentlyPlayingSongNum < 1) {
+        currentlyPlayingSongNum = currentAlbum.songs.length;
+    }
 };
 
 var updatePlayerBarSong = function() {
@@ -163,7 +186,7 @@ var playerBarPlayButton = '<span class="ion-play"></span>';
 var playerBarPauseButton = '<span class="ion-pause"></span>';
 
 var currentAlbum = null;
-var currentlyPlayingSongNumber = null;
+var currentlyPlayingSongNum = null;
 var currentSongFromAlbum = null;
 
 var $nextButton = $('.main-controls .next');
