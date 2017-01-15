@@ -17,10 +17,10 @@ $(window).load(function() {
         animatePoints();
     }
     
-    var scrollDistance = $('.selling-points').offset().top() - $(window).height() + 200;
+    var scrollDistance = $('.selling-points').offset().top - $(window).height() + 200;
     
     $(window).scroll(function(event) {
-        if ($(window).scrollTop() <= scrollDistance) {
+        if ($(window).scrollTop() >= scrollDistance) {
             animatePoints();
         }
     });

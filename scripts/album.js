@@ -13,7 +13,7 @@ var createSongRow = function(songNumber, songName, songLength) {
     var clickHandler = function() {
         var $songNumber = parseInt($(this).attr('data-song-number'));
 
-        if (currentlyPlayingSongNumber === null) {
+        if (currentlyPlayingSongNumber !== null) {
             // Revert to song number for currently playing song because user started playing new song.
             var $currentlyPlayingCell = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
             $currentlyPlayingCell.html(currentlyPlayingSongNumber);
@@ -141,7 +141,6 @@ var previousSong = function() {
     //Update the HTML of the previous song's .song-item-number element with a number
     //Update the HTML of the new song's .song-item-number element with a pause button
     var lastSongNumber = getLastSongNumber(currentSongIndex);
-    console.log(lastSongNumber);
     var $previousSongNumberCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
     var $lastSongNumberCell = $('.song-item-number[data-song-number="' + lastSongNumber + '"]');
     
