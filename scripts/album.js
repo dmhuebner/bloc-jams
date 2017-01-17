@@ -1,3 +1,23 @@
+var togglePlayFromPlayerBar = function() {
+    var $currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNum);
+    //If a song is paused and the play button is clicked in the player bar, it will
+    if (currentSoundFile.isPaused()) {
+        //Change the song number cell from a play button to a pause button
+        $currentlyPlayingCell.html(pauseButtonTemplate);
+        //Change the HTML of the player bar's play button to a pause button
+        $playerBarPlayPauseButton.html(playerBarPauseButton);
+        //Play the song
+        currentSoundFile.play();
+    } else {
+    //If song is playing and pause button is clicked
+        //Change the song number cell from a pause button to a play button
+        $currentlyPlayingCell.html(playButtonTemplate);
+        //Change the HTML of the player bar's pause button to a play button
+        $playerBarPlayPauseButton.html(playerBarPlayButton);
+        //Pause the song
+        currentSoundFile.pause();
+    }
+};
 
 var setSong = function(songNumber) {
     //conditional that stops currentSoundFile from playing if it is defined
@@ -286,6 +306,7 @@ var currentlyPlayingSongNum = null;
 var currentSongFromAlbum = null;
 var currentSoundFile = null;
 var currentVolume = 80;
+var $playerBarPlayPauseButton = $('.main-controls .play-pause');
 
 var $nextButton = $('.main-controls .next');
 var $previousButton = $('.main-controls .previous');
@@ -295,6 +316,7 @@ $(document).ready(function() {
     setupSeekBars();
     $nextButton.click(nextSong);
     $previousButton.click(previousSong);
+    $playerBarPlayPauseButton.click(togglePlayFromPlayerBar);
 });
 
 
