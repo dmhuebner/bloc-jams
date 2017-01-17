@@ -36,7 +36,7 @@ var createSongRow = function(songNumber, songName, songLength) {
        '<tr class="album-view-song-item">'
      + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
      + '  <td class="song-item-title">' + songName + '</td>'
-     + '  <td class="song-item-duration">' + songLength + '</td>'
+     + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
      + '</tr>'
      ;
 
@@ -54,8 +54,8 @@ var createSongRow = function(songNumber, songName, songLength) {
             // Switch from Play -> Pause button to indicate new song is playing.
             $(this).html(pauseButtonTemplate);
             setSong($songNumber);
-            updatePlayerBarSong();
             currentSoundFile.play();
+            updatePlayerBarSong();
             updateSeekBarWhileSongPlays();
             //update volume seek-bar
             var $volumeFill = $('.volume .fill');
@@ -123,6 +123,28 @@ var setCurrentAlbum = function(album) {
     }
 };
 
+var filterTimeCode = function(timeInSeconds) {
+    timeInSeconds = parseFloat(timeInSeconds);
+    var seconds = Math.floor(timeInSeconds % 60);
+    var minutes = Math.floor(timeInSeconds / 60);
+    //prevent single digit seconds
+    if (seconds < 10) {
+        seconds = '0' + seconds;
+    }
+    var encodedTime = minutes + ':' + seconds;
+    return encodedTime;
+};
+
+var setCurrentTimeInPlayerBar = function(currentTime) {
+    var $currentTimeElement = $('.currently-playing .current-time');
+    $currentTimeElement.text(currentTime);
+};
+
+var setTotalTimeInPlayerBar = function(totalTime) {
+    var $totalTimeElement = $('.currently-playing .total-time');
+    $totalTimeElement.text(totalTime);
+};
+
 var updateSeekBarWhileSongPlays = function() {
     if (currentSoundFile) {
         currentSoundFile.bind('timeupdate', function() {
@@ -130,6 +152,7 @@ var updateSeekBarWhileSongPlays = function() {
             var $seekBar = $('.seek-control .seek-bar');
             
             updateSeekPercentage($seekBar, seekBarFillRatio);
+            setCurrentTimeInPlayerBar(filterTimeCode(this.getTime()));
         });
     }
 };
@@ -271,8 +294,8 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .song-name').text(currentSongFromAlbum.title);
     $('.currently-playing .artist-name').text(currentAlbum.artist);
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + ' - ' + currentAlbum.artist);
-    
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    setTotalTimeInPlayerBar(filterTimeCode(currentSongFromAlbum.duration));
 };
 
 //play/pause button templates
