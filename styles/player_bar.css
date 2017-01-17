@@ -130,6 +130,14 @@
     margin-left: -0.5rem;
 }
 
+.seek-control .thumb {
+    left: 0;
+}
+
+.seek-control .fill {
+    width: 0;
+}
+
 .player-bar .volume {
     width: 25%;
     text-align: right;
